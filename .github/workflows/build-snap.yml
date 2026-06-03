@@ -9,12 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: snapcore/action-build@v1
-        id: snapcraft
-        with:
-          path: .
+      - name: Install Snapcraft with LXD
+        uses: samuelmeuli/action-snapcraft@v3
+
+      - name: Build snap
+        run: sg lxd -c 'snapcraft --use-lxd'
 
       - uses: actions/upload-artifact@v4
         with:
           name: snap-build
-          path: ${{ steps.snapcraft.outputs.snap }}
+          path: "*.snap"
