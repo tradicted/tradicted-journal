@@ -12,15 +12,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Linux unpacked
+        run: npx electron-vite build && npx electron-builder --linux dir
+
+      - name: Verify files
+        run: |
+          echo "=== snap dir ==="
+          ls -la snap/
+          echo "=== unpacked dir ==="
+          ls -la dist-electron-build/
+
       - name: Install snapcraft
         run: |
           sudo snap install snapcraft --classic
           echo /snap/bin >> $GITHUB_PATH
 
       - name: Build snap
-        working-directory: snap
         run: |
-          SNAPCRAFT_BUILD_ENVIRONMENT=host snapcraft
+          cd snap
+          SNAPCRAFT_BUILD_ENVIRONMENT=host snapcraft pack .
 
       - uses: actions/upload-artifact@v4
         with:
