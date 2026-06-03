@@ -1,0 +1,16 @@
+node_modules
+dist
+out
+dist-electron-build
+*.tsbuildinfo
+journal_functions.md
+.DS_Store
+Thumbs.db
+.eslintcache
+*.log*
+*.db
+*.db-shm
+*.db-wal
+.env
+.env.*
+commands.txt

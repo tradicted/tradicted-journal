@@ -1,0 +1,55 @@
+appId: com.tradicted.journal
+productName: Tradicted Journal
+directories:
+  buildResources: build
+  output: dist-electron-build
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  - '!trading-journal/*'
+  - '!todo.md'
+asarUnpack:
+  - resources/**
+  - node_modules/better-sqlite3/**
+win:
+  target:
+    - nsis
+    - portable
+  executableName: TradictedJournal
+nsis:
+  artifactName: ${productName}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+mac:
+  target:
+    - dmg
+    - zip
+  artifactName: ${productName}-${version}-mac.${ext}
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    - NSCameraUsageDescription: Application requests access to the device's camera.
+    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+  identity: "Robert Gorak (37S8888KX4)"
+  notarize: true
+dmg:
+  artifactName: ${productName}-${version}.${ext}
+linux:
+  target:
+    - AppImage
+    - deb
+  maintainer: tradicted.com
+  category: Finance
+appImage:
+  artifactName: ${name}-${version}.${ext}
+npmRebuild: true
+publish:
+  provider: github
+  owner: tradicted
+  repo: tradicted-journal
