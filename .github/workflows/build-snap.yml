@@ -12,32 +12,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Linux unpacked
-        run: npx electron-vite build && npx electron-builder --linux dir
-
-      - name: Verify files
+      - name: Debug
         run: |
-          echo "=== snap dir ==="
-          ls -la snap/
-          echo "=== unpacked dir ==="
-          ls -la dist-electron-build/
+          echo "=== PWD ==="
+          pwd
+          echo "=== ROOT FILES ==="
+          ls -la
+          echo "=== SNAP DIR ==="
+          ls -la snap/ || echo "snap/ does not exist"
+          echo "=== GIT FILES IN SNAP ==="
+          git ls-files snap/
+          echo "=== SNAPCRAFT VERSION ==="
+          which snapcraft || echo "snapcraft not installed yet"
 
       - name: Install snapcraft
         run: |
           sudo snap install snapcraft --classic
           echo /snap/bin >> $GITHUB_PATH
 
+      - name: Debug snapcraft
+        run: |
+          echo "=== SNAPCRAFT PATH ==="
+          which snapcraft
+          snapcraft --version
+          echo "=== CURRENT DIR ==="
+          pwd
+          echo "=== CD SNAP AND PWD ==="
+          cd snap && pwd && ls -la
+
       - name: Build snap
         run: |
-          cd snap
-          SNAPCRAFT_BUILD_ENVIRONMENT=host snapcraft pack .
+          cd snap && SNAPCRAFT_BUILD_ENVIRONMENT=host snapcraft pack .
 
       - uses: actions/upload-artifact@v4
         with:
