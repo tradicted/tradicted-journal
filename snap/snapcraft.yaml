@@ -13,7 +13,8 @@ confinement: strict
 parts:
   tradicted-journal:
     plugin: dump
-    source: dist-electron-build/linux-arm64-unpacked
+    source: ../dist-electron-build/linux-arm64-unpacked
+    source-type: local
     stage-packages:
       - libnspr4
       - libnss3
@@ -24,7 +25,6 @@ parts:
       - libgtk-3-0
       - libgbm1
       - libasound2
-      - libpixman-1-0
 
 apps:
   tradicted-journal:
