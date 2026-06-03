@@ -44,6 +44,7 @@ linux:
   target:
     - AppImage
     - deb
+    - snap
   maintainer: tradicted.com
   category: Finance
 appImage:
