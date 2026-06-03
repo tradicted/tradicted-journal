@@ -1,0 +1,40 @@
+name: tradicted-journal
+base: core24
+version: '1.0.0'
+summary: Free open-source desktop trading journal
+description: |
+  A free, offline-first desktop trading journal for Windows, macOS, and Linux.
+  Log trades, track performance, analyze rule adherence, and manage multiple
+  portfolios. All data stored locally — no account required.
+
+grade: stable
+confinement: strict
+
+parts:
+  tradicted-journal:
+    plugin: dump
+    source: dist-electron-build/linux-arm64-unpacked
+    stage-packages:
+      - libnspr4
+      - libnss3
+      - libxss1
+      - libxtst6
+      - xdg-utils
+      - libatspi2.0-0
+      - libgtk-3-0
+      - libgbm1
+      - libasound2
+      - libpixman-1-0
+
+apps:
+  tradicted-journal:
+    command: TradictedJournal
+    plugs:
+      - home
+      - network
+      - audio-playback
+      - opengl
+      - x11
+      - wayland
+      - desktop
+      - desktop-legacy
