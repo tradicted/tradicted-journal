@@ -8,20 +8,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install Snapcraft
-        uses: snapcore/action-build@v1
-        id: snapcraft
-      - name: Install dependencies
-        run: npm install
-      - name: Build Linux
-        run: npm run build:linux
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-      - name: Upload snap artifact
-        uses: actions/upload-artifact@v4
+
+      - name: Install Snapcraft with LXD
+        uses: samuelmeuli/action-snapcraft@v3
+
+      - name: Build snap
+        run: sg lxd -c 'snapcraft --use-lxd'
+
+      - uses: actions/upload-artifact@v4
         with:
           name: snap-build
-          path: dist-electron-build/*.snap
+          path: "*.snap"
