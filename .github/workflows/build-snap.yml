@@ -1,20 +1,19 @@
-name: Build Snap
+name: Build Linux
 
 on:
   workflow_dispatch:
 
 jobs:
-  build-snap:
-    runs-on: ubuntu-22.04
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  build-linux:
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 20
+          cache: npm
 
       - name: Install snapcraft
         run: |
@@ -22,10 +21,10 @@ jobs:
           echo /snap/bin >> $GITHUB_PATH
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build Linux with snap
-        run: npm run build:linux
+      - name: Build
+        run: npx electron-builder --linux
         env:
           SNAP_DESTRUCTIVE_MODE: "true"
 
