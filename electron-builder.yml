@@ -49,6 +49,14 @@ linux:
   category: Finance
 appImage:
   artifactName: ${name}-${version}.${ext}
+snap:
+  # snap "name" defaults to package.json name: tradicted-trading-journal
+  # Publish the snap to the Snap Store (edge channel first; promote to stable
+  # once verified). Uses SNAPCRAFT_STORE_CREDENTIALS env at publish time.
+  publish:
+    - provider: snapStore
+      channels:
+        - edge
 npmRebuild: true
 publish:
   provider: github
