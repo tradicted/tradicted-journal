@@ -23,9 +23,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Compile the app (renderer + main + preload) into out/ via electron-vite.
+      # Without this, electron-builder packages an empty app.asar and fails with
+      # "out/main/index.js ... not found in this archive".
+      - name: Build app bundle
+        run: npm run build
+
       # Build AppImage + deb (these don't need snapcraft). Uploaded as artifacts.
       - name: Build AppImage + deb
-        run: npx electron-builder --linux AppImage deb
+        run: npx electron-builder --linux AppImage deb --publish never
 
       # Build the snap in isolation so a snap failure can't be masked by the
       # AppImage/deb build, and publish it to the Snap Store (edge channel).
