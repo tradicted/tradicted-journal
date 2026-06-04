@@ -16,27 +16,23 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build Linux unpacked
-        run: npx electron-vite build && npx electron-builder --linux dir
-
-      - name: Install Snapcraft and LXD
+      - name: Install snapcraft
         run: |
           sudo snap install snapcraft --classic
           echo /snap/bin >> $GITHUB_PATH
-          sudo /snap/bin/lxd waitready
-          sudo /snap/bin/lxd init --auto
-          sudo snap set lxd daemon.group=adm
-          sudo snap restart lxd
-          sudo snap set snapcraft provider=lxd
-          sudo iptables -I DOCKER-USER -i lxdbr0 -j ACCEPT || true
 
-      - name: Build snap
-        run: cd snap && sg lxd -c 'snapcraft --use-lxd'
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Linux with snap
+        run: npm run build:linux
+        env:
+          SNAP_DESTRUCTIVE_MODE: "true"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: snap-build
-          path: "snap/*.snap"
+          name: linux-builds
+          path: |
+            dist-electron-build/*.AppImage
+            dist-electron-build/*.deb
+            dist-electron-build/*.snap
