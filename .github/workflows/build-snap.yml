@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-snap:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -22,15 +22,19 @@ jobs:
       - name: Build Linux unpacked
         run: npx electron-vite build && npx electron-builder --linux dir
 
-      - name: Install snapcraft
+      - name: Install Snapcraft and LXD
         run: |
           sudo snap install snapcraft --classic
           echo /snap/bin >> $GITHUB_PATH
+          sudo /snap/bin/lxd waitready
+          sudo /snap/bin/lxd init --auto
+          sudo snap set lxd daemon.group=adm
+          sudo snap restart lxd
+          sudo snap set snapcraft provider=lxd
+          sudo iptables -I DOCKER-USER -i lxdbr0 -j ACCEPT || true
 
       - name: Build snap
-        run: |
-          cd snap
-          SNAPCRAFT_BUILD_ENVIRONMENT=host snapcraft
+        run: cd snap && sg lxd -c 'snapcraft --use-lxd'
 
       - uses: actions/upload-artifact@v4
         with:
