@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>tradicted-trading-journal</id>
+    <version>1.0.0</version>
+    <title>Tradicted Trading Journal</title>
+    <authors>Tradicted</authors>
+    <projectUrl>https://www.tradicted.com</projectUrl>
+    <licenseUrl>https://github.com/tradicted/tradicted-journal/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Free open-source desktop trading journal by Tradicted.
+
+Track your trades, analyze your performance, and improve your trading strategy with Tradicted Trading Journal.</description>
+    <summary>Free open-source desktop trading journal by Tradicted</summary>
+    <tags>trading journal finance stocks forex crypto tradicted</tags>
+    <projectSourceUrl>https://github.com/tradicted/tradicted-journal</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/tradicted/tradicted-journal/issues</bugTrackerUrl>
+  </metadata>
+</package>
