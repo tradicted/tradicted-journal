@@ -1,21 +1,48 @@
-name: Build Snap
+name: Build Linux
 
 on:
   workflow_dispatch:
 
 jobs:
-  build-snap:
-    runs-on: ubuntu-22.04
+  build-linux:
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Snapcraft with LXD
-        uses: samuelmeuli/action-snapcraft@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
-      - name: Build snap
-        run: sg lxd -c 'snapcraft --use-lxd'
+      - name: Install snapcraft
+        run: |
+          sudo snap install snapcraft --classic
+          echo /snap/bin >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app bundle
+        run: npm run build
+
+      - name: Build AppImage + deb
+        run: npx electron-builder --linux AppImage deb --publish never
+
+      - name: Build + publish snap to Snap Store
+        run: npx electron-builder --linux snap --publish always
+        env:
+          SNAP_DESTRUCTIVE_MODE: "true"
+          SNAPCRAFT_BUILD_ENVIRONMENT: host
+          SNAPCRAFT_STORE_AUTH: candid
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: snap-build
-          path: "*.snap"
+          name: linux-builds
+          path: |
+            dist-electron-build/*.AppImage
+            dist-electron-build/*.deb
+            dist-electron-build/*.snap
