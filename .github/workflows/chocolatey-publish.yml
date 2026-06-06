@@ -9,7 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Push to Chocolatey
+      - name: Pack and push to Chocolatey
         run: |
           choco apikey --key ${{ secrets.CHOCOLATEY_API_KEY }} --source https://push.chocolatey.org/
-          choco push chocolatey/tradicted-trading-journal.1.0.0.nupkg --source https://push.chocolatey.org/
+          choco pack chocolatey/tradicted-trading-journal.nuspec
+          choco push tradicted-trading-journal.1.0.0.nupkg --source https://push.chocolatey.org/
